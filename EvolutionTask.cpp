@@ -26,14 +26,10 @@ EvolutionTask::EvolutionTask(Element *elem, float timeFromNow)
 {}
 
 #include <QThread>
-void EvolutionTask::run()
+void EvolutionTask::_run()
 {
-    if (!preRun())
-        return;
-
     // Some calculation on the copy the Matter
     _result->_mass = _timeFromNow;
     QThread::sleep(2);
 
-    postRun();
 }

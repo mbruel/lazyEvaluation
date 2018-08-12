@@ -41,11 +41,10 @@ class ComputationTask : public QObject, public QRunnable
 public:
     virtual ~ComputationTask() = default;
 
-    virtual void run() = 0;
+    virtual void _run() = 0;
     inline Element *getComputedElement();
 
-    bool preRun();
-    void postRun();
+    void run() override;
 
 
     inline void cancelIfNotRunning();
@@ -60,6 +59,8 @@ protected:
 
 private:
     void waitUntilTaskIsComplete(); // used by the LazyComputationManager
+    bool _preRun();
+    void _postRun();
 
 protected:
     Element       *_result;

@@ -26,6 +26,15 @@
 
 QAtomicUInt ComputationTask::sNbAbortedTasks = 0;
 
+void ComputationTask::run()
+{
+    if (!_preRun())
+        return;
+
+    _run();
+    _postRun();
+}
+
 ComputationTask::ComputationTask(Element *element):
     _result(new Element(*element)), _isCancelled(0x0),
     _mutexTask(), _waitOnTask(), _isTaskManagerWaiting(false)
@@ -41,7 +50,7 @@ void ComputationTask::waitUntilTaskIsComplete()
     _mutexTask.unlock();
 }
 
-bool ComputationTask::preRun()
+bool ComputationTask::_preRun()
 {
     if (_isCancelled.load() != 0x0)
     {
@@ -53,7 +62,7 @@ bool ComputationTask::preRun()
     return true;
 }
 
-void ComputationTask::postRun()
+void ComputationTask::_postRun()
 {
     // So the EvolutionManager can fetch the result (we transfer its ownership)
     emit ComputationTaskComplete(this);
